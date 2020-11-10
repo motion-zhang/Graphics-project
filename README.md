@@ -1,7 +1,7 @@
 # Graphics-project Team 8: Jiangyun Wang, Fangji Xu, Liangmou Zhang
 Our team will work on creating an animation to show the revolution of the Earth around the Sun as well as the rotation of themselves for this project
 
-
+![Introduction_Image](https://github.com/motion-zhang/Graphics-project/Introduction.png) 
 
 Here is a draft for our program. In this canvas, we have two 3D geometric shapes: two spheres. The small sphere is the Earth, it rotates itself and goes around the big sphere, which is the Sun, follow by the orbit. The big sphere(Sun) also rotates itself.
  
