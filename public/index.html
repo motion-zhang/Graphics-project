@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
     <style>
         h1 {text-align: center;}
@@ -7,26 +8,48 @@
     </style>
 
     <title>Computer Graphics Project: Revolution and Rotation</title>
-
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-
-    </head>
-
-<body onload="init();render()">
-    <div class="container">
-        <h1>Revolution and Rotation of the Sun and Earth</h1>
-
-        <canvas id="canvas" width="1100px" height="800px"></canvas><br />
-
-    </div>
+    <script src="https://webglfundamentals.org/webgl/resources/webgl-utils.js"></script>
+    <script src="https://webglfundamentals.org/webgl/resources/m4.js"></script>
+    <script src="https://webglfundamentals.org/webgl/resources/primitives.js"></script>
+    <script src="Sphere.js"></script>
+</head>
 
 
+<body onload="main()">
 
+<canvas width = "1000" height = "1000"  id="canvas"></canvas>
+<!-- vertex shader -->
+<script  id="vertex-shader-3d" type="x-shader/x-vertex">
+attribute vec4 a_position;
+attribute vec4 a_color;
 
+uniform mat4 u_matrix;
 
+varying vec4 v_color;
 
+void main() {
+  // Multiply the position by the matrix.
+  gl_Position = u_matrix * a_position;
 
+  // Pass the color to the fragment shader.
+  v_color = a_color;
+}
+</script>
+
+<!-- fragment shader -->
+<script  id="fragment-shader-3d" type="x-shader/x-fragment">
+precision mediump float;
+
+// Passed in from the vertex shader.
+varying vec4 v_color;
+
+uniform vec4 u_colorMult;
+
+void main() {
+   gl_FragColor = v_color * u_colorMult;
+}
+</script>
 
 </body>
 </html>
-
