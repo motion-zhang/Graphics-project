@@ -1,0 +1,22 @@
+{
+  "name": "cs4300-project-team8",
+  "version": "1.0.0",
+  "description": "Our team will work on creating an animation to show the revolution of the Earth around the Sun as well as the rotation of themselves for this project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/motion-zhang/Graphics-project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/motion-zhang/Graphics-project/issues"
+  },
+  "homepage": "https://github.com/motion-zhang/Graphics-project#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
