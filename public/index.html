@@ -9,47 +9,76 @@
 
     <title>Computer Graphics Project: Revolution and Rotation</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-    <script src="https://webglfundamentals.org/webgl/resources/webgl-utils.js"></script>
-    <script src="https://webglfundamentals.org/webgl/resources/m4.js"></script>
-    <script src="https://webglfundamentals.org/webgl/resources/primitives.js"></script>
-    <script src="Sphere.js"></script>
+    <!--<script src="https://webglfundamentals.org/webgl/resources/webgl-utils.js"></script>-->
+    <!--<script src="https://webglfundamentals.org/webgl/resources/m4.js"></script>-->
+    <!--<script src="https://webglfundamentals.org/webgl/resources/primitives.js"></script>-->
+    <!--<script src="Sphere.js"></script>-->
+
 </head>
 
 
-<body onload="main()">
+<!--<body onload="main()">-->
 
 <canvas width = "1000" height = "1000"  id="canvas"></canvas>
-<!-- vertex shader -->
-<script  id="vertex-shader-3d" type="x-shader/x-vertex">
-attribute vec4 a_position;
-attribute vec4 a_color;
+<script type="module">import * as THREE from 'modules/three.module'
+function main() {
+    const canvas = document.querySelector('#canvas');
+    const renderer = new THREE.WebGLRenderer({canvas});
+    const scene = new THREE.Scene();
+    const boxWidth = 1;
+    const boxHeight = 1;
+    const boxDepth = 1;
+    const geometry = new THREE.BoxGeometry(boxWidth,boxHeight,boxDepth);
+    const material = new THREE.MeshBasicMaterial({color: 0x44aa88});
+    const cube = new THREE.Mesh(geometry,material);
 
-uniform mat4 u_matrix;
+    const fov = 75;
+    const aspect = 2;  // canvas default = 2 = 300/150
+    const near = 0.1;
+    const far = 5;
+    const camera = new THREE.PerspectiveCamera
+    (fov, aspect, near, far);
 
-varying vec4 v_color;
+    scene.add(cube);
 
-void main() {
-  // Multiply the position by the matrix.
-  gl_Position = u_matrix * a_position;
-
-  // Pass the color to the fragment shader.
-  v_color = a_color;
+    renderer.render(scene,camera);
 }
+
+main();
+
 </script>
+
+<!-- vertex shader -->
+<!--<script  id="vertex-shader-3d" type="x-shader/x-vertex">-->
+<!--attribute vec4 a_position;-->
+<!--attribute vec4 a_color;-->
+
+<!--uniform mat4 u_matrix;-->
+
+<!--varying vec4 v_color;-->
+
+<!--void main() {-->
+  <!--// Multiply the position by the matrix.-->
+  <!--gl_Position = u_matrix * a_position;-->
+
+  <!--// Pass the color to the fragment shader.-->
+  <!--v_color = a_color;-->
+<!--}-->
+<!--</script>-->
 
 <!-- fragment shader -->
-<script  id="fragment-shader-3d" type="x-shader/x-fragment">
-precision mediump float;
+<!--<script  id="fragment-shader-3d" type="x-shader/x-fragment">-->
+<!--precision mediump float;-->
 
-// Passed in from the vertex shader.
-varying vec4 v_color;
+<!--// Passed in from the vertex shader.-->
+<!--varying vec4 v_color;-->
 
-uniform vec4 u_colorMult;
+<!--uniform vec4 u_colorMult;-->
 
-void main() {
-   gl_FragColor = v_color * u_colorMult;
-}
-</script>
+<!--void main() {-->
+   <!--gl_FragColor = v_color * u_colorMult;-->
+<!--}-->
+<!--</script>-->
 
 </body>
 </html>
