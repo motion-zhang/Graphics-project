@@ -1,0 +1,14 @@
+#wrapper{
+    position:relative;
+    width:300px;
+    height:200px;
+}
+#canvasTop,#canvasBottom{
+    position:absolute; top:0px; left:0px;
+    border:1px solid green;
+    width:300px;
+    height:200px;
+}
+#canvasTop{
+    border:1px solid red;
+}
