@@ -9,10 +9,11 @@
     <title>Computer Graphics Project: Revolution and Rotation</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-
+    <script src="Sphere.js"></script>
+    <script src="render.js"></script>
     </head>
 
-<body onload="init();render()">
+<body>
     <div class="container">
         <h1>Revolution and Rotation of the Sun and Earth</h1>
 
@@ -20,13 +21,44 @@
 
     </div>
 
+    <script type="module">import * as THREE from './js/three.module.js';
+
+        function main() {
+            const canvas = document.querySelector('#canvas');
+            const renderer = new THREE.WebGLRenderer({canvas});
+            const fov = 75;
+            const aspect = 2;
+            const near = 0.1;
+            const far = 15;
+            const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+            camera.position.z = 3;
+
+            const scene = new THREE.Scene();
+
+        //  Material and Lighting
+            const material = new THREE.MeshPhongMaterial
+            ({color: 0x00ff00} ); // green
+
+            const color = 0xFFFFFF;
+            const intensity = 1;
+            const light = new THREE.DirectionalLight(color, intensity);
+            light.position.set(-1, 2, 4);
+            scene.add(light);
+
+            const objects = [];
+            const spread = 15;
 
 
+            const sphere = addSphere(THREE,scene,0.7,12,8,material,-1,3)
+            console.log("sphere is: ",sphere.toString())
+            scene.add(sphere)
+            render(40,scene,camera,sphere,renderer)
+            requestAnimationFrame(render);
+        }
+        main()
 
-
-
-
-
+        // requestAnimationFrame(render);
+    </script>
 </body>
 </html>
 
