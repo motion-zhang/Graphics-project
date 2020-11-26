@@ -6,8 +6,20 @@ function main(THREE) {
     const aspect = 2;  // the canvas default
     const near = 0.1;
     const far = 1000;
-    const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.z = 120;
+
+    // Original Camera
+    const camera1 = new THREE.PerspectiveCamera(fov, aspect, near, far);
+    camera1.position.z = 120;
+
+    // Zooming Camera
+    const camera2 = new THREE.PerspectiveCamera(fov, aspect, near, far);
+    camera2.position.z = 200;
+    camera2.zoom = 1;
+    camera2.fov = 50;
+
+    const cameraInView = camera2;
+
+
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xAAAAAA);
@@ -30,27 +42,48 @@ function main(THREE) {
     const objects = [];
     const spread = 15;
 
+    // Sun parameters
+    const sunRadius = 15;
+    const sunPosX = -2;
+    const sunPosY = -1;
+    const sunRingPosX = sunPosX;
+    const sunRingPosY = sunPosY;
+    // Earth parameters
+    const earthRadius = 0.7 * sunRadius;
+    const earthPosX = 3;
+    const earthPosY = 0.5;
+    const earthRingPosX = earthPosX;
+    const earthRingPosY = earthPosY;
 
-
+    // Sun
     {
-        const innerRadius = 60;   //---- orbit
+        const widthSegments = 32;
+        const heightSegments = 32;
+        addSolidGeometry(sunPosX, sunPosY, new THREE.SphereBufferGeometry(sunRadius, widthSegments, heightSegments),THREE,spread,scene,objects);
+    }
+
+    // Sun Orbit
+    {
+        const innerRadius = 60;
         const outerRadius = 62;
         const segments = 180;
-        addSolidGeometry(0, 0, new THREE.RingBufferGeometry(innerRadius, outerRadius, segments),THREE,spread,scene,objects);
+        addSolidGeometry(sunRingPosX, sunRingPosY, new THREE.RingBufferGeometry(innerRadius, outerRadius, segments),THREE,spread,scene,objects);
     }
 
+
+    // Earth
     {
-        const radius = 30;
-        const widthSegments = 120;     //---- Sun
-        const heightSegments = 80;
-        addSolidGeometry(-1, 0, new THREE.SphereBufferGeometry(radius, widthSegments, heightSegments),THREE,spread,scene,objects);
+        const widthSegments = 32;
+        const heightSegments = 32;
+        addSolidGeometry(earthPosX, earthPosY, new THREE.SphereBufferGeometry(earthRadius, widthSegments, heightSegments),THREE,spread,scene,objects);
     }
 
+    // Earth Orbit
     {
-        const radius = 15;
-        const widthSegments = 60;    //  ---- Earth
-        const heightSegments = 40;
-        addSolidGeometry(4, 0, new THREE.SphereBufferGeometry(radius, widthSegments, heightSegments),THREE,spread,scene,objects);
+        const innerRadius = 30;
+        const outerRadius = 32;
+        const segments = 90;
+        addSolidGeometry(earthRingPosX, earthRingPosY, new THREE.RingBufferGeometry(innerRadius, outerRadius, segments),THREE,spread,scene,objects);
     }
 
 
@@ -59,8 +92,8 @@ function main(THREE) {
 
         if (resizeRendererToDisplaySize(renderer)) {
             const canvas = renderer.domElement;
-            camera.aspect = canvas.clientWidth / canvas.clientHeight;
-            camera.updateProjectionMatrix();
+            cameraInView.aspect = canvas.clientWidth / canvas.clientHeight;
+            cameraInView.updateProjectionMatrix();
         }
 
         objects.forEach((obj, ndx) => {
@@ -70,7 +103,7 @@ function main(THREE) {
             obj.rotation.y = rot;
         });
 
-        renderer.render(scene, camera);
+        renderer.render(scene, cameraInView);
 
         requestAnimationFrame(render);
     }
