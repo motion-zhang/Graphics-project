@@ -22,8 +22,6 @@ function main(THREE) {
 
     const cameraInView = camera2;
 
-
-
     const scene = new THREE.Scene();
 
     {
@@ -51,11 +49,10 @@ function main(THREE) {
     const sunRingPosX = sunPosX;
     const sunRingPosY = sunPosY;
     // Earth parameters
-    const earthRadius = 0.7 * sunRadius;
+    const earthRadius = 0.5 * sunRadius;
     const earthPosX = 3;
     const earthPosY = 0.5;
-    const earthRingPosX = earthPosX;
-    const earthRingPosY = earthPosY;
+
 
     // Sun
     {
@@ -66,9 +63,9 @@ function main(THREE) {
 
     // Sun Orbit
     {
-        const innerRadius = 60;
-        const outerRadius = 62;
-        const segments = 180;
+        const innerRadius = 75;
+        const outerRadius = 77;
+        const segments = 225;
         addSolidGeometry(sunRingPosX, sunRingPosY, new THREE.RingBufferGeometry(innerRadius, outerRadius, segments),THREE,spread,scene,objects);
     }
 
@@ -80,13 +77,6 @@ function main(THREE) {
         addSolidGeometry(earthPosX, earthPosY, new THREE.SphereBufferGeometry(earthRadius, widthSegments, heightSegments),THREE,spread,scene,objects);
     }
 
-    // Earth Orbit
-    {
-        const innerRadius = 30;
-        const outerRadius = 32;
-        const segments = 90;
-        addSolidGeometry(earthRingPosX, earthRingPosY, new THREE.RingBufferGeometry(innerRadius, outerRadius, segments),THREE,spread,scene,objects);
-    }
 
 
     function render(time) {
