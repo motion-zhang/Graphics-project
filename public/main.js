@@ -8,27 +8,59 @@ import {HorizontalBlurShader} from "./js/examples/shaders/HorizontalBlurShader.j
 
 function main() {
     const canvas = document.querySelector('#canvas');
-    const renderer = new THREE.WebGLRenderer({canvas});
+    const renderer = new THREE.WebGLRenderer({
+                                                 canvas,
+                                                 alpha: true,
+                                             });
 
     const fov = 40;
     const aspect = 2;  // the canvas default
     const near = 0.1;
     const far = 1000;
 
-    const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(0, 0,200);
+    // Original Camera
+    const camera1 = new THREE.PerspectiveCamera(fov, aspect, near, far);
+    camera1.position.set(0, 10,120);
+
+    // Zooming Camera
+    const camera2 = new THREE.PerspectiveCamera(fov, aspect, near, far);
+    camera2.position.set(0, 0,200);
+
+    const cameraInView = camera2;
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xAAAAAA);
 
     // texture loader to load images onto geometries
     const loader = new THREE.TextureLoader();
-
-    const controls = new OrbitControls(camera, canvas);
-    controls.target.set(0, 5, 0)
-    controls.update();
+    // {
+    //     const color = 0xFFFFFF;
+    //     const intensity = 1;
+    //     const light = new THREE.DirectionalLight(color, intensity);
+    //     light.position.set(0, 0, 10);
+    //     scene.add(light);
+    // }
+    // {
+    //     const color = 0xFFFFFF;
+    //     const intensity = 1;
+    //     const light = new THREE.DirectionalLight(color, intensity);
+    //     light.position.set(1, -2, -4);
+    //     scene.add(light);
+    // }
 
     const objects = [];
+    const spread = 15;
+
+    // Sun parameters
+    const sunRadius = 15;
+    const sunPosX = -2;
+    const sunPosY = -1;
+    const sunRingPosX = sunPosX;
+    const sunRingPosY = sunPosY;
+    // Earth parameters
+    const earthRadius = 0.5 * sunRadius;
+    const earthPosX = 3;
+    const earthPosY = 0.5;
+
 
     // spot light
     const spotlight = new THREE.PointLight('#ffdcb4', 1.5);
@@ -53,6 +85,37 @@ function main() {
         scene.add(sunMesh)
         objects.push(sunMesh)
     })
+    // const sunMat = new THREE.MeshBasicMaterial({map: loader.load('image/sun.png')})
+    // const sunMesh = new THREE.Mesh(sunGeo, sunMat);
+    // sunMesh.position.set(0, 0, 0)
+    // scene.add(sunMesh)
+    // objects.push(sunMesh)
+
+    // const sunImg = new THREE.SpriteMaterial(
+    //     {
+    //         map: new THREE.TextureLoader.loadTexture("image/sun.png"),
+    //         useScreenCoordinates: false,
+    //         color: 0xffffee,
+    //         transparent: false,
+    //         blending: THREE.AdditiveBlending
+    //     }
+    // );
+    // const sunSprite = new THREE.Sprite(sunImg);
+    // sunSprite.scale.set(25, 25, 1.0)
+    // sunMesh.add(sunSprite);
+
+    // scene.add(spotlight.target)
+
+    // atmosphere
+    const atmoGeo = new THREE.CircleBufferGeometry(20, 30);
+    const atmoMaterial = new THREE.MeshPhongMaterial ({color: "#F1D0D0", emissive: "#F1D0D0"} )
+    const atmoMesh = new THREE.Mesh(atmoGeo, atmoMaterial);
+    atmoMesh.position.set(0, 0, 10)
+    // scene.add(atmoMesh);
+
+    const controls = new OrbitControls(camera2, canvas);
+    controls.target.set(0, 5, 0)
+    controls.update();
 
     // earth geometry
     const earthGeo = new THREE.SphereBufferGeometry(10, 15, 15);
@@ -61,6 +124,7 @@ function main() {
     earthMesh.position.set(50, 0, 0)
     scene.add(earthMesh)
     objects.push(earthMesh)
+
 
     // animation
     let start;
@@ -71,13 +135,21 @@ function main() {
         objects.forEach((obj) => {
             obj.rotation.y = elapsed * 0.001;
         })
-        rotateEarth(earthMesh, elapsed * 0.01)
-        renderer.render(scene, camera);
+        moveEarth(earthMesh, elapsed * 0.01)
+        renderer.render(scene, camera2);
         requestAnimationFrame(render)
 
-    }
-    requestAnimationFrame(render)
-    // renderer.render(scene, camera2)
+
+        // Sun Orbit
+        {
+            const innerRadius = 75;
+            const outerRadius = 77;
+            const segments = 225;
+            addSolidGeometry(sunRingPosX, sunRingPosY, new THREE.RingBufferGeometry(innerRadius, outerRadius, segments),THREE,spread,scene,objects);
+
+        }
+        requestAnimationFrame(render)
+        // renderer.render(scene, camera2)
 //     const composer = new EffectComposer( renderer );
 //     composer.addPass( new RenderPass( scene, camera2 ) );
 //
@@ -89,14 +161,101 @@ function main() {
 //     vblur.renderToScreen = true;
 //     composer.addPass( vblur );
 //     composer.render();
+        // // Earth
+        // {
+        //     const widthSegments = 32;
+        //     const heightSegments = 32;
+        //     addSolidGeometry(earthPosX, earthPosY, new THREE.SphereBufferGeometry(earthRadius, widthSegments, heightSegments),THREE,spread,scene,objects, "#00FFFF");
+        // }
 
-}
+        // function render(time) {
+        //     time *= 0.001;
+        //
+        //     if (resizeRendererToDisplaySize(renderer)) {
+        //         const canvas = renderer.domElement;
+        //         cameraInView.aspect = canvas.clientWidth / canvas.clientHeight;
+        //         cameraInView.updateProjectionMatrix();
+        //     }
+        //
+        //     objects.forEach((obj, ndx) => {
+        //         const speed = .1 + ndx * .05;
+        //         const rot = time * speed;
+        //         obj.rotation.x = rot;
+        //         obj.rotation.y = rot;
+        //     });
+        //
+        //     renderer.render(scene, cameraInView);
+        //
+        //     requestAnimationFrame(render);
+        // }
+        // // render(time,camera,objects,scene)
+        // requestAnimationFrame(render);
+    }
 
-// rotate the Earth around the Sun
-function rotateEarth(obj, time) {
-    obj.position.x = Math.cos(time * 0.1 + 5) * 50;
-    obj.position.z = Math.sin(time * 0.1 + 5) * 50;
-}
+    function addObject(x, y, spread, scene, obj, objects) {
+        obj.position.x = x * spread;
+        obj.position.y = y * spread;
 
+
+        scene.add(obj);
+        objects.push(obj);
+    }
+
+    // Earth
+    {
+        const widthSegments = 32;
+        const heightSegments = 32;
+        addSolidGeometry(earthPosX, earthPosY, new THREE.SphereBufferGeometry(earthRadius, widthSegments, heightSegments),THREE,spread,scene,objects);
+    }
+
+
+
+    function render(time) {
+        time *= 0.001;
+
+        if (resizeRendererToDisplaySize(renderer)) {
+            const canvas = renderer.domElement;
+            cameraInView.aspect = canvas.clientWidth / canvas.clientHeight;
+            cameraInView.updateProjectionMatrix();
+        }
+
+        objects.forEach((obj, ndx) => {
+            const speed = .1 + ndx * .05;
+            const rot = time * speed;
+            obj.rotation.x = rot;
+            obj.rotation.y = rot;
+        });
+
+        renderer.render(scene, cameraInView);
+
+
+        function moveEarth(obj, time) {
+            obj.position.x = Math.cos(time * 0.1 + 5) * 50;
+            obj.position.z = Math.sin(time * 0.1 + 5) * 50;
+        }
+
+// function createMaterial(THREE, objColor) {
+//     const material = new THREE.MeshPhongMaterial({
+//         side: THREE.DoubleSide,
+//         color: objColor
+//     });
+//
+//     // const hue = Math.random();
+//     // const saturation = 1;
+//     // const luminance = .5;
+//     // material.color.setHSL(hue, saturation, luminance);
+//
+//     return material;
+// }
+//
+// function addSolidGeometry(x, y, geometry, THREE,spread,scene,objects, objColor) {
+//     const mesh = new THREE.Mesh(geometry, createMaterial(THREE, objColor));
+//     addObject(x, y, spread, scene, mesh, objects);
+// }
+//
+// function addLineGeometry(x, y, geometry, THREE,spread,scene,objects) {
+//     const material = new THREE.LineBasicMaterial({color: 0x000000});
+//     const mesh = new THREE.LineSegments(geometry, material);
+//     addObject(x, y, mesh);
+// }
 main();
-
