@@ -8,7 +8,10 @@ import {HorizontalBlurShader} from "./js/examples/shaders/HorizontalBlurShader.j
 
 function main() {
     const canvas = document.querySelector('#canvas');
-    const renderer = new THREE.WebGLRenderer({canvas});
+    const renderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+    });
 
     const fov = 40;
     const aspect = 2;  // the canvas default
@@ -26,7 +29,6 @@ function main() {
     const cameraInView = camera2;
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xAAAAAA);
 
     // texture loader to load images onto geometries
     const loader = new THREE.TextureLoader();
@@ -55,11 +57,10 @@ function main() {
     const sunRingPosX = sunPosX;
     const sunRingPosY = sunPosY;
     // Earth parameters
-    const earthRadius = 0.7 * sunRadius;
+    const earthRadius = 0.5 * sunRadius;
     const earthPosX = 3;
     const earthPosY = 0.5;
-    const earthRingPosX = earthPosX;
-    const earthRingPosY = earthPosY;
+
 
     // spot light
     const spotlight = new THREE.PointLight('#ffdcb4', 1.5);
@@ -138,6 +139,14 @@ function main() {
         renderer.render(scene, camera2);
         requestAnimationFrame(render)
 
+
+    // Sun Orbit
+    {
+        const innerRadius = 75;
+        const outerRadius = 77;
+        const segments = 225;
+        addSolidGeometry(sunRingPosX, sunRingPosY, new THREE.RingBufferGeometry(innerRadius, outerRadius, segments),THREE,spread,scene,objects);
+
     }
     requestAnimationFrame(render)
     // renderer.render(scene, camera2)
@@ -187,9 +196,38 @@ function addObject(x, y, spread, scene, obj, objects) {
     obj.position.x = x * spread;
     obj.position.y = y * spread;
 
+
     scene.add(obj);
     objects.push(obj);
 }
+
+    // Earth
+    {
+        const widthSegments = 32;
+        const heightSegments = 32;
+        addSolidGeometry(earthPosX, earthPosY, new THREE.SphereBufferGeometry(earthRadius, widthSegments, heightSegments),THREE,spread,scene,objects);
+    }
+
+
+
+    function render(time) {
+        time *= 0.001;
+
+        if (resizeRendererToDisplaySize(renderer)) {
+            const canvas = renderer.domElement;
+            cameraInView.aspect = canvas.clientWidth / canvas.clientHeight;
+            cameraInView.updateProjectionMatrix();
+        }
+
+        objects.forEach((obj, ndx) => {
+            const speed = .1 + ndx * .05;
+            const rot = time * speed;
+            obj.rotation.x = rot;
+            obj.rotation.y = rot;
+        });
+
+        renderer.render(scene, cameraInView);
+
 
 function moveEarth(obj, time) {
     obj.position.x = Math.cos(time * 0.1 + 5) * 50;
