@@ -3,7 +3,10 @@ import * as THREE from './js/three.module.js';
 
 function main() {
     const canvas = document.querySelector('#canvas');
-    const renderer = new THREE.WebGLRenderer({canvas});
+    const renderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+    });
     const scene = new THREE.Scene();
 
     const fov = 40;
@@ -79,5 +82,4 @@ function rotateEarth(obj, time) {
 }
 
 main();
-
 
