@@ -23,14 +23,14 @@ function main() {
 
     const objects = [];
 
-    // spot light
-    const spotlight = new THREE.PointLight('#ffdcb4', 1.5);
-    spotlight.position.set(0, 0, 0);
-    spotlight.castShadow = true
-    spotlight.shadow.bias = 0.001
-    spotlight.shadow.mapSize.width = 2048;
-    spotlight.shadow.mapSize.height = 2048;
-    scene.add(spotlight);
+    // point light
+    const pointlight = new THREE.PointLight('#ffdcb4', 1.5);
+    pointlight.position.set(0, 0, 0);
+    pointlight.castShadow = true
+    pointlight.shadow.bias = 0.001
+    pointlight.shadow.mapSize.width = 2048;
+    pointlight.shadow.mapSize.height = 2048;
+    scene.add(pointlight);
 
     // ambient light
     const ambient = new THREE.AmbientLight(0xaaaaaa);
