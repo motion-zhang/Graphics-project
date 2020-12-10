@@ -7,7 +7,7 @@ function main() {
     let requestID;
     let state;
     let currentTime;
-    let speed = 1;
+    let speed = 0.001;
     const objects = [];
     const canvas = document.querySelector('#canvas');
 
@@ -28,13 +28,13 @@ function main() {
     document.getElementById('btnSpeedUp').addEventListener('click', function (e) {
         e.preventDefault();
         // currentTime = pauseTime
-        speed = speed * 0.75
+        speed = speed + 0.001
     });
 
     document.getElementById('btnSlowDown').addEventListener('click', function (e) {
         e.preventDefault();
         // currentTime = pauseTime
-        speed = speed * 1.25
+        speed = speed - 0.001
     });
 
     const renderer = new THREE.WebGLRenderer({
@@ -107,10 +107,11 @@ function main() {
         console.log("state ", state, "currentTime: ", currentTime, " pauseTime: ", pauseTime)
 
         pauseTime = currentTime
-        const elapsed = (currentTime - start)/speed;
+        const elapsed = (currentTime - start);
         console.log("timestamp: ",currentTime," start: ", start)
         objects.forEach((obj) => {
-                    obj.rotation.y = elapsed * 0.001;
+                    // obj.rotation.y = elapsed * 0.001;
+            obj.rotation.y = elapsed * speed;
         })
 
         rotateEarth(earthMesh, elapsed * 0.01)
