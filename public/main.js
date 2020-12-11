@@ -1,44 +1,46 @@
 import {OrbitControls} from './js/examples/OrbitControls.js';
 import * as THREE from './js/three.module.js';
 let startPos;
+var theta = 0
 function main() {
-    let start;
-    let pauseTime;
     let requestID;
     let state;
-    let currentTime;
-    let speed = 0.001;
-    // let end;
-
+    let speed;
+    var clock = new THREE.Clock()
     const objects = [];
     const canvas = document.querySelector('#canvas');
 
+   // Interaction
     const bar = document.getElementById("Bar")
 
     document.getElementById('btnResume').addEventListener('click', function (e) {
         e.preventDefault();
         state = true
         requestID = requestAnimationFrame(render);
+        speed = 0.9
+        clock.start()
     })
 
    document.getElementById('btnPause').addEventListener('click', function (e) {
         e.preventDefault();
+        clock.stop()
         state = false
-        currentTime = pauseTime
-        console.log("pause button: state ", state," currentTime: ",currentTime)
+        speed = 0
         cancelAnimationFrame(requestID);
     });
 
     document.getElementById('btnSpeedUp').addEventListener('click', function (e) {
         e.preventDefault();
-        // currentTime = pauseTime
-        speed = speed + 0.001
+        if (state) {
+            speed += 0.
+        }
     });
 
     document.getElementById('btnSlowDown').addEventListener('click', function (e) {
         e.preventDefault();
-        // currentTime = pauseTime
-        speed = speed - 0.001
+        if (state && (speed > 0.3)) {
+            speed -= 0.3
+        }
     });
 
     const renderer = new THREE.WebGLRenderer({
@@ -61,8 +63,6 @@ function main() {
     const controls = new OrbitControls(camera, canvas);
     controls.target.set(0, 5, 0)
     controls.update();
-
-
 
     // point light
     const pointlight = new THREE.PointLight('#ffdcb4', 1.5);
@@ -100,25 +100,14 @@ function main() {
     objects.push(earthMesh)
 
 
-    function render(timestamp) {
-        if (start === undefined) {
-            start = currentTime;
-        }
-        if (state) {
-            currentTime = timestamp
-        }
+    function render() {
         // for debug, suggest to delete at the final phase
-        console.log("state ", state, "currentTime: ", currentTime, " pauseTime: ", pauseTime)
-
-        pauseTime = currentTime
-        const elapsed = (currentTime - start);
-        console.log("timestamp: ",currentTime," start: ", start)
+        // console.log("state ", state, "currentTime: ", currentTime, " pauseTime: ", pauseTime)
+        const elapsed = clock.getDelta()
         objects.forEach((obj) => {
-                    // obj.rotation.y = elapsed * 0.001;
-            obj.rotation.y = elapsed * speed;
+            obj.rotation.y += elapsed * speed;
         })
-
-        rotateEarth(earthMesh, elapsed * 0.01)
+        rotateEarth(earthMesh, speed)
         renderer.render(scene, camera);
         requestAnimationFrame(render);
         }
@@ -126,17 +115,21 @@ function main() {
 }
 
 // rotate the Earth around the Sun
-function rotateEarth(obj, time) {
-    const posX = Math.cos(time * 0.1 + 5) * 50;
-    const posZ = Math.sin(time * 0.1 + 5) * 50;
+function rotateEarth(obj, speed) {
+    var dTheta = 2 * Math.PI / 1000;
+    theta += dTheta*speed;
+
+    const posX = Math.cos(theta) * 50;
+    const posZ = Math.sin(theta) * 50;
+
+    console.log("time:  ",theta, posX)
     if (startPos === undefined) {
         (posX, posZ)
     }
     obj.position.x = posX
     obj.position.z = posZ
+    return theta
 }
-
-
 
 main();
 
