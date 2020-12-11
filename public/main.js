@@ -1,6 +1,6 @@
 import {OrbitControls} from './js/examples/OrbitControls.js';
 import * as THREE from './js/three.module.js';
-
+let startPos;
 function main() {
     let start;
     let pauseTime;
@@ -8,8 +8,12 @@ function main() {
     let state;
     let currentTime;
     let speed = 0.001;
+    // let end;
+
     const objects = [];
     const canvas = document.querySelector('#canvas');
+
+    const bar = document.getElementById("Bar")
 
     document.getElementById('btnResume').addEventListener('click', function (e) {
         e.preventDefault();
@@ -123,8 +127,13 @@ function main() {
 
 // rotate the Earth around the Sun
 function rotateEarth(obj, time) {
-    obj.position.x = Math.cos(time * 0.1 + 5) * 50;
-    obj.position.z = Math.sin(time * 0.1 + 5) * 50;
+    const posX = Math.cos(time * 0.1 + 5) * 50;
+    const posZ = Math.sin(time * 0.1 + 5) * 50;
+    if (startPos === undefined) {
+        (posX, posZ)
+    }
+    obj.position.x = posX
+    obj.position.z = posZ
 }
 
 
