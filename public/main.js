@@ -41,7 +41,7 @@ function main() {
 
     // sun geometry
     const sunGeo = new THREE.SphereBufferGeometry(25, 32, 32);
-    loader.load('image/sun3.png', (texture) => {
+    loader.load('image/sun6.png', (texture) => {
         const material = new THREE.MeshBasicMaterial({map: texture})
         const sunMesh = new THREE.Mesh(sunGeo, material);
         sunMesh.position.set(0, 0, 0)
@@ -52,7 +52,8 @@ function main() {
 
     // earth geometry
     const earthGeo = new THREE.SphereBufferGeometry(10, 15, 15);
-    const earthMaterial = new THREE.MeshPhongMaterial({map: loader.load("image/earth.jpeg")})
+    const earthMaterial = new THREE.MeshPhongMaterial({map: loader.load("image/earth.jpeg"),
+                                                      bumpMap: loader.load('image/elev_bump_8k.jpg')})
     const earthMesh = new THREE.Mesh(earthGeo, earthMaterial);
     earthMesh.position.set(50, 0, 0)
     scene.add(earthMesh)
