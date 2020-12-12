@@ -1,63 +1,59 @@
 import {OrbitControls} from './js/examples/OrbitControls.js';
 import * as THREE from './js/three.module.js';
 
-var theta = 0
-var dTheta = 2 * Math.PI / 1000;
 function main() {
     let requestID;
     let state;
-    let speed;
-    let pauseSpeed;
-    // var clock = new THREE.Clock()
     const objects = [];
-    const canvas = document.querySelector('#canvas');
+    let currentDelta ;
+    let elapsed;
+    let start;
+    // Interaction
 
-   // Interaction
-
-    document.getElementById('btnResume').addEventListener('click', function (e) {
+    document.getElementById('btnStart').addEventListener('click', function (e) {
         e.preventDefault();
-        if (!state || (state === undefined)) {
 
-        state = true;
-        requestID = requestAnimationFrame(render);
-        if (speed === undefined) {
-            speed = 1.2
-            pauseSpeed = speed;
-        } else {
-            speed = pauseSpeed;
-        }
-        // clock.start()
+        if (!state || (state === undefined)) {
+            objects.forEach((obj) => {
+                obj.rotation.y = 0;
+            })
+            earthMesh.position.set(50, 0, 0)
+            requestID = requestAnimationFrame(render);
+            state = true;
+            start = 0;
         }
 
     });
 
-   document.getElementById('btnPause').addEventListener('click', function (e) {
+    document.getElementById('btnStop').addEventListener('click', function (e) {
         e.preventDefault();
 
         if (state) {
             // clock.stop()
             state = false
-            pauseSpeed = speed;
-            speed = 0
+            currentDelta = elapsed;
             cancelAnimationFrame(requestID);
         }
 
     });
 
-    document.getElementById('btnSpeedUp').addEventListener('click', function (e) {
-        e.preventDefault();
-        if (state) {
-            speed += 0.3
-        }
-    });
+    // document.getElementById('btnSpeedUp').addEventListener('click', function (e) {
+    //     e.preventDefault();
+    //     if (state) {
+    //         speed += 0.2
+    //     }
+    // });
+    //
+    // document.getElementById('btnSlowDown').addEventListener('click', function (e) {
+    //     e.preventDefault();
+    //     if (state && (speed > 0.2)) {
+    //         speed -= 0.2
+    //     }
+    // });
 
-    document.getElementById('btnSlowDown').addEventListener('click', function (e) {
-        e.preventDefault();
-        if (state && (speed > 0.3)) {
-            speed -= 0.3
-        }
-    });
 
+
+    const canvas = document.querySelector('#canvas');
     const renderer = new THREE.WebGLRenderer({
         canvas,
         alpha: true,
@@ -70,7 +66,7 @@ function main() {
     const far = 1000;
 
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(0, 0, 200);
+    camera.position.set(0, 0,200);
 
     // texture loader to load images onto geometries
     const loader = new THREE.TextureLoader();
@@ -78,6 +74,8 @@ function main() {
     const controls = new OrbitControls(camera, canvas);
     controls.target.set(0, 5, 0)
     controls.update();
+
+
 
     // point light
     const pointlight = new THREE.PointLight('#ffdcb4', 1.5);
@@ -105,39 +103,41 @@ function main() {
 
     // earth geometry
     const earthGeo = new THREE.SphereBufferGeometry(10, 15, 15);
-    const earthMaterial = new THREE.MeshPhongMaterial({
-        map: loader.load("image/earth.jpeg"),
-        bumpMap: loader.load('image/elev_bump_8k.jpg')
-    })
+    const earthMaterial = new THREE.MeshPhongMaterial({map: loader.load("image/earth.jpeg"),
+        bumpMap: loader.load('image/elev_bump_8k.jpg')})
     const earthMesh = new THREE.Mesh(earthGeo, earthMaterial);
     earthMesh.position.set(50, 0, 0)
     scene.add(earthMesh)
     objects.push(earthMesh)
 
+    // animation
 
-    function render() {
-        objects.forEach((obj) => {
-            obj.rotation.y += dTheta*speed;
-        });
-        console.log("1. state is ",state, "speed is:",speed, "pause speed: ", pauseSpeed)
-        rotateEarth(earthMesh, speed)
-        renderer.render(scene, camera);
+    function render(timestamp) {
 
-        requestAnimationFrame(render);
+        if (state) {
+            if (start === undefined || start == 0)
+                start = timestamp;
+            elapsed = timestamp - start;
+        } else {
+            elapsed = currentDelta;
         }
 
+
+        objects.forEach((obj) => {
+            obj.rotation.y = elapsed * 0.001;
+        })
+        rotateEarth(earthMesh, elapsed * 0.01)
+        renderer.render(scene, camera);
+        requestAnimationFrame(render);
+
+    }
+    // requestAnimationFrame(render);
 }
 
 // rotate the Earth around the Sun
-function rotateEarth(obj, speed) {
-    theta += dTheta*speed
-    console.log("2.theta is: ", theta, " changed delta: ",dTheta*speed, " speed: ", speed)
-
-    // console.log("theta:  ",theta,speed)
-
-    obj.position.x = Math.cos(theta) * 50;
-    obj.position.z = Math.sin(theta) * 50;
+function rotateEarth(obj, time) {
+    obj.position.x = Math.cos(time * 0.1 + 5) * 50;
+    obj.position.z = Math.sin(time * 0.1 + 5) * 50;
 }
 
 main();
-
