@@ -7,7 +7,7 @@ function main() {
     let requestID;
     let state;
     let speed;
-    let originalPause;
+    let pauseSpeed;
     // var clock = new THREE.Clock()
     const objects = [];
     const canvas = document.querySelector('#canvas');
@@ -22,9 +22,9 @@ function main() {
         requestID = requestAnimationFrame(render);
         if (speed === undefined) {
             speed = 1.2
-            originalPause = speed;
+            pauseSpeed = speed;
         } else {
-            speed = originalPause;
+            speed = pauseSpeed;
         }
 
         }
@@ -36,7 +36,7 @@ function main() {
         // clock.stop()
         if (state) {
             state = false
-            originalPause = speed;
+            pauseSpeed = speed;
             speed = 0
             cancelAnimationFrame(requestID);
         }
@@ -118,7 +118,7 @@ function main() {
         objects.forEach((obj) => {
             obj.rotation.y += dTheta*speed;
         });
-        console.log("1. state is ",state, "speed is:",speed, "pause speed: ", originalPause)
+        console.log("1. state is ",state, "speed is:",speed, "pause speed: ", pauseSpeed)
         rotateEarth(earthMesh, speed)
         renderer.render(scene, camera);
 
@@ -130,16 +130,13 @@ function main() {
 // rotate the Earth around the Sun
 function rotateEarth(obj, speed) {
     theta += dTheta*speed
-    console.log("2.theta is: ", theta)
+    console.log("2.theta is: ", theta, " changed delta: ",dTheta*speed, " speed: ", speed)
 
-
-    const posX = Math.cos(theta) * 50;
-    const posZ = Math.sin(theta) * 50;
 
     // console.log("theta:  ",theta,speed)
 
-    obj.position.x = posX
-    obj.position.z = posZ
+    obj.position.x = Math.cos(theta) * 50;
+    obj.position.z = Math.sin(theta) * 50;
 }
 
 main();
