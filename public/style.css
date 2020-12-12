@@ -20,21 +20,21 @@
 #interaction {
     display: flex;
 }
-#progress {
-    width: 25em;
-    height: 1em;
-    border-radius: 0.25em;
-    background-color: gainsboro;
+/*#progress {*/
+    /*width: 25em;*/
+    /*height: 1em;*/
+    /*border-radius: 0.25em;*/
+    /*background-color: gainsboro;*/
 
-    border: 1px solid grey;
+    /*border: 1px solid grey;*/
 
-    display: inline-flex;
-}
+    /*display: inline-flex;*/
+/*}*/
 
-#bar {
-    background-color: mediumpurple;
-    height: inherit;
-    border-radius: inherit;
+/*#bar {*/
+    /*background-color: mediumpurple;*/
+    /*height: inherit;*/
+    /*border-radius: inherit;*/
 
-    width: 5%;
-}
+    /*width: 5%;*/
+/*}*/

@@ -8,12 +8,11 @@ function main() {
     let state;
     let speed;
     let pauseSpeed;
-    var clock = new THREE.Clock()
+    // var clock = new THREE.Clock()
     const objects = [];
     const canvas = document.querySelector('#canvas');
 
    // Interaction
-    const bar = document.getElementById("Bar")
 
     document.getElementById('btnResume').addEventListener('click', function (e) {
         e.preventDefault();
@@ -27,7 +26,7 @@ function main() {
         } else {
             speed = pauseSpeed;
         }
-        clock.start()
+        // clock.start()
         }
 
     });
@@ -36,7 +35,7 @@ function main() {
         e.preventDefault();
 
         if (state) {
-            clock.stop()
+            // clock.stop()
             state = false
             pauseSpeed = speed;
             speed = 0
@@ -133,7 +132,6 @@ function main() {
 function rotateEarth(obj, speed) {
     theta += dTheta*speed
     console.log("2.theta is: ", theta, " changed delta: ",dTheta*speed, " speed: ", speed)
-
 
     // console.log("theta:  ",theta,speed)
 
