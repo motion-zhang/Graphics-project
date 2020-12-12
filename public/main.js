@@ -1,5 +1,7 @@
 import {OrbitControls} from './js/examples/OrbitControls.js';
 import * as THREE from './js/three.module.js';
+import {OBJLoader} from './js/examples/loaders/OBJLoader.js';
+import {MTLLoader} from './js/examples/loaders/MTLLoader.js';
 
 function main() {
     const canvas = document.querySelector('#canvas');
@@ -17,12 +19,14 @@ function main() {
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
     camera.position.set(0, 0,200);
 
+
     // texture loader to load images onto geometries
     const loader = new THREE.TextureLoader();
 
     const controls = new OrbitControls(camera, canvas);
     controls.target.set(0, 5, 0)
     controls.update();
+
 
     const objects = [];
 
@@ -59,6 +63,42 @@ function main() {
     scene.add(earthMesh)
     objects.push(earthMesh)
 
+
+
+    // add satellite object
+    const satelliteMesh = null;
+    const satelliteRotate = satelliteMesh;
+    const satellite_mtlLoader = new MTLLoader();
+    satellite_mtlLoader.load(
+        'objects/satellite/satellite.mtl', (materials) => {
+            materials.preload();
+            const satellite_objLoader = new OBJLoader();
+            satellite_objLoader.setMaterials(materials);
+            satellite_objLoader.load(
+                'objects/satellite/satellite.obj', (root) => {
+
+                    const satelliteMesh = root;
+                    satelliteMesh.position.set(80, 30, 0);
+                   // satelliteMesh.scale.set(2,2,2);
+                    satelliteMesh.rotation.x = Math.PI / 2;
+                    satelliteMesh.rotation.y = -Math.PI / 2;
+                    /*
+                    satelliteMesh.traverse(function(child){
+                        if ((child instanceof THREE.Mesh)&&(satelliteMesh(child))) {
+                            child.material.color.setRGB(192,192,192);
+                        }
+                    });
+                    */
+
+                    scene.add(satelliteMesh);
+                    objects.push(satelliteMesh);
+                });
+        });
+
+
+
+
+
     // animation
     let start;
     function render(timestamp) {
@@ -69,18 +109,32 @@ function main() {
             obj.rotation.y = elapsed * 0.001;
         })
         rotateEarth(earthMesh, elapsed * 0.01)
+   //     rotateSatellite(satelliteMesh, elapsed * 0.01 )
+
+
         renderer.render(scene, camera);
         requestAnimationFrame(render);
 
     }
     requestAnimationFrame(render);
+
 }
 
 // rotate the Earth around the Sun
-function rotateEarth(obj, time) {
-    obj.position.x = Math.cos(time * 0.1 + 5) * 50;
-    obj.position.z = Math.sin(time * 0.1 + 5) * 50;
+function rotateEarth(obj1, time) {
+    obj1.position.x = Math.cos(time * 0.1 + 5) * 50;
+    obj1.position.z = Math.sin(time * 0.1 + 5) * 50;
 }
 
+/*
+function rotateSatellite(obj1, time) {
+    obj1.position.x = Math.cos(time * 0.1 + 5) * 50;
+    obj1.position.z = Math.sin(time * 0.1 + 5) * 50;
+}
+*/
+
+
 main();
+
+
 
