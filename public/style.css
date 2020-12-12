@@ -1,19 +1,40 @@
-#canvas{
-    width: 1000px;
-    height: 600px;
-    /*display: block;*/
+#canvas {
+    display: block;
+    background: url("image/background.png") no-repeat  center center;
+    background-size: cover;}
+
+/*#loading-overlay {*/
+    /*position: absolute;*/
+    /*width: 100%;*/
+    /*height: 100%;*/
+
+    /*!*display: flex;*!*/
+    /*!*justify-content: center;*!*/
+    /*!*align-items: center;*!*/
+/*}*/
+
+.loading-overlay-hidden {
+    display: none !important;
 }
-/*#wrapper{*/
-/*    position:relative;*/
-/*    width:300px;*/
-/*    height:200px;*/
-/*}*/
-/*#canvasTop,#canvasBottom{*/
-/*    position:absolute; top:0px; left:0px;*/
-/*    border:1px solid green;*/
-/*    width:300px;*/
-/*    height:200px;*/
-/*}*/
-/*#canvasTop{*/
-/*    border:1px solid red;*/
-/*}*/
+
+#interaction {
+    display: flex;
+}
+#progress {
+    width: 25em;
+    height: 1em;
+    border-radius: 0.25em;
+    background-color: gainsboro;
+
+    border: 1px solid grey;
+
+    display: inline-flex;
+}
+
+#bar {
+    background-color: mediumpurple;
+    height: inherit;
+    border-radius: inherit;
+
+    width: 5%;
+}
