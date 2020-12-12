@@ -17,10 +17,10 @@ function main() {
 
     document.getElementById('btnResume').addEventListener('click', function (e) {
         e.preventDefault();
-        if (!state || (state == undefined)) {
+        if (!state || (state === undefined)) {
         state = true;
         requestID = requestAnimationFrame(render);
-        if (speed == undefined) {
+        if (speed === undefined) {
             speed = 1.2
             originalPause = speed;
         } else {
