@@ -1,12 +1,14 @@
 import {OrbitControls} from './js/examples/OrbitControls.js';
 import * as THREE from './js/three.module.js';
-let startPos;
+
 var theta = 0
+var dTheta = 2 * Math.PI / 1000;
 function main() {
     let requestID;
     let state;
     let speed;
-    var clock = new THREE.Clock()
+    let originalPause;
+    // var clock = new THREE.Clock()
     const objects = [];
     const canvas = document.querySelector('#canvas');
 
@@ -15,24 +17,36 @@ function main() {
 
     document.getElementById('btnResume').addEventListener('click', function (e) {
         e.preventDefault();
-        state = true
+        if (!state || (state == undefined)) {
+        state = true;
         requestID = requestAnimationFrame(render);
-        speed = 0.9
-        clock.start()
+        if (speed == undefined) {
+            speed = 1.2
+            originalPause = speed;
+        } else {
+            speed = originalPause;
+        }
+
+        }
+        // clock.start()
     })
 
    document.getElementById('btnPause').addEventListener('click', function (e) {
         e.preventDefault();
-        clock.stop()
-        state = false
-        speed = 0
-        cancelAnimationFrame(requestID);
+        // clock.stop()
+        if (state) {
+            state = false
+            originalPause = speed;
+            speed = 0
+            cancelAnimationFrame(requestID);
+        }
+
     });
 
     document.getElementById('btnSpeedUp').addEventListener('click', function (e) {
         e.preventDefault();
         if (state) {
-            speed += 0.
+            speed += 0.3
         }
     });
 
@@ -101,14 +115,13 @@ function main() {
 
 
     function render() {
-        // for debug, suggest to delete at the final phase
-        // console.log("state ", state, "currentTime: ", currentTime, " pauseTime: ", pauseTime)
-        const elapsed = clock.getDelta()
         objects.forEach((obj) => {
-            obj.rotation.y += elapsed * speed;
-        })
+            obj.rotation.y += dTheta*speed;
+        });
+        console.log("1. state is ",state, "speed is:",speed, "pause speed: ", originalPause)
         rotateEarth(earthMesh, speed)
         renderer.render(scene, camera);
+
         requestAnimationFrame(render);
         }
 
@@ -116,19 +129,17 @@ function main() {
 
 // rotate the Earth around the Sun
 function rotateEarth(obj, speed) {
-    var dTheta = 2 * Math.PI / 1000;
-    theta += dTheta*speed;
+    theta += dTheta*speed
+    console.log("2.theta is: ", theta)
+
 
     const posX = Math.cos(theta) * 50;
     const posZ = Math.sin(theta) * 50;
 
-    console.log("time:  ",theta, posX)
-    if (startPos === undefined) {
-        (posX, posZ)
-    }
+    // console.log("theta:  ",theta,speed)
+
     obj.position.x = posX
     obj.position.z = posZ
-    return theta
 }
 
 main();
