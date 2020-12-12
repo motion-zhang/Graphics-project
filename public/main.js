@@ -8,7 +8,7 @@ function main() {
     let state;
     let speed;
     let pauseSpeed;
-    // var clock = new THREE.Clock()
+    var clock = new THREE.Clock()
     const objects = [];
     const canvas = document.querySelector('#canvas');
 
@@ -18,6 +18,7 @@ function main() {
     document.getElementById('btnResume').addEventListener('click', function (e) {
         e.preventDefault();
         if (!state || (state === undefined)) {
+
         state = true;
         requestID = requestAnimationFrame(render);
         if (speed === undefined) {
@@ -26,15 +27,16 @@ function main() {
         } else {
             speed = pauseSpeed;
         }
-
+        clock.start()
         }
-        // clock.start()
+
     })
 
    document.getElementById('btnPause').addEventListener('click', function (e) {
         e.preventDefault();
-        // clock.stop()
+
         if (state) {
+            clock.stop()
             state = false
             pauseSpeed = speed;
             speed = 0
