@@ -30,7 +30,7 @@ function main() {
         clock.start()
         }
 
-    })
+    });
 
    document.getElementById('btnPause').addEventListener('click', function (e) {
         e.preventDefault();
