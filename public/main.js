@@ -33,12 +33,18 @@ function main() {
     const earthMesh = new THREE.Mesh(earthGeo, earthMaterial);
     earthMesh.position.set(50, 0, 0)
 
+    // create geometries for miniCanvas
+    const sunMesh2 = new THREE.Mesh(sunGeo, material);
+    sunMesh2.position.set(0, 0, 0)
+    const earthMesh2 = new THREE.Mesh(earthGeo, earthMaterial);
+    earthMesh2.position.set(50, 0, 0)
+
     // draw canvas
     const mainCanvasInfo = {
         toDraw: [pointlight, ambient, sunMesh, earthMesh], toRotate: [sunMesh, earthMesh]}
     const miniCanvasInfo = {
-        toDraw: [pointlight.clone(), ambient.clone(), sunMesh.clone(), earthMesh.clone()],
-        toRotate: [sunMesh.clone(), earthMesh.clone()]}
+        toDraw: [pointlight.clone(), ambient.clone(), sunMesh2, earthMesh2],
+        toRotate: [sunMesh2, earthMesh2]}
     drawMainCanvas(mainCanvasInfo)
     drawMiniCanvas(miniCanvasInfo)
 
@@ -51,7 +57,6 @@ function drawMainCanvas(geomtries) {
     camera.position.set(0, 0,200);
     const scene = new THREE.Scene();
     geomtries.toDraw.forEach((obj) => {
-        console.log(obj)
         scene.add(obj)
     })
 
@@ -201,15 +206,14 @@ function drawMiniCanvas(geomtries) {
             start = timestamp;
         const elapsed = timestamp - start;
         geomtries.toRotate.forEach((obj) => {
-            obj.rotation.y = elapsed * 0.001;
+            obj.rotation.y = elapsed * 0.001
         })
         rotateEarth(geomtries.toDraw[3], elapsed * 0.01)
         resizeRendererToDisplaySize(renderer);
-        // renderer.setScissorTest(false);
-        // renderer.clear(true, true);
-        // renderer.setScissorTest(true);
-        // const miniCanInfo = addMiniCanvas();
-        // renderSection(miniCanInfo)
+
+        renderer.setScissorTest(false);
+        renderer.clear(true, true);
+        renderer.setScissorTest(true);
 
         renderer.render(scene, camera);
         requestAnimationFrame(render);
