@@ -20,8 +20,6 @@ function main() {
     let requestIDMini;
     let state;
 
-
-
     document.getElementById('btnResume').addEventListener('click', function (e) {
         e.preventDefault();
         if (!state || (state === undefined)) {
@@ -34,7 +32,6 @@ function main() {
             last = Date.now()
             requestID = requestAnimationFrame(drawMainCanvas(mainCanvasInfo))
             requestIDMini = requestAnimationFrame(drawMiniCanvas(miniCanvasInfo))
-            console.log("begin: ", requestID)
         }
     });
 
@@ -45,7 +42,6 @@ function main() {
             state = false
             pauseSpeed = speed;
             speed = 0;
-            console.log("end: ", requestID);
             cancelAnimationFrame(requestID);
             cancelAnimationFrame(requestIDMini);
 
@@ -119,7 +115,6 @@ function drawMainCanvas(geomtries) {
 
     const canvas = document.querySelector('#mainCanvas');
     const renderer = new THREE.WebGLRenderer({canvas, alpha: true});
-    // const camera = new THREE.PerspectiveCamera(40, 2, 0.1, 1000);
 
     const scene = new THREE.Scene();
     geomtries.toDraw.forEach((obj) => {
