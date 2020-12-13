@@ -3,7 +3,25 @@ import * as THREE from './js/three.module.js';
 import {OBJLoader} from './js/examples/loaders/OBJLoader.js';
 import {MTLLoader} from './js/examples/loaders/MTLLoader.js';
 
+var dTheta = 2 * Math.PI / 1000;
 function main() {
+    let requestID;
+    let state;
+    let speed;
+    let last = Date.now();
+
+    document.getElementById('btnResume').addEventListener('click', function (e) {
+        e.preventDefault();
+        if (!state || (state === undefined)) {
+            state = true;
+            speed = 1
+            requestID = drawMainCanvas(mainCanvasInfo,speed,last);
+            last = Date.now()
+
+
+        }
+
+    });
     // texture loader to load images onto geometries
     const loader = new THREE.TextureLoader();
 
@@ -45,12 +63,43 @@ function main() {
     const miniCanvasInfo = {
         toDraw: [pointlight.clone(), ambient.clone(), sunMesh2, earthMesh2],
         toRotate: [sunMesh2, earthMesh2]}
-    drawMainCanvas(mainCanvasInfo)
+    // drawMainCanvas(mainCanvasInfo,state)
     drawMiniCanvas(miniCanvasInfo)
 
 }
 
-function drawMainCanvas(geomtries) {
+function drawMainCanvas(geomtries,speed,last) {
+
+/**
+    document.getElementById('btnPause').addEventListener('click', function (e) {
+        e.preventDefault();
+
+        if (state) {
+            // clock.stop()
+            state = false
+            // pauseSpeed = speed;
+            speed = 0
+            cancelAnimationFrame(requestID);
+            requestID = undefined
+        }
+
+    });
+
+    document.getElementById('btnSpeedUp').addEventListener('click', function (e) {
+        e.preventDefault();
+        if (state) {
+            speed += 0.3
+        }
+    });
+
+    document.getElementById('btnSlowDown').addEventListener('click', function (e) {
+        e.preventDefault();
+        if (state && (speed > 0.3)) {
+            speed -= 0.3
+        }
+    });
+ **/
+
     const canvas = document.querySelector('#mainCanvas');
     const renderer = new THREE.WebGLRenderer({canvas, alpha: true});
     const camera = new THREE.PerspectiveCamera(40, 2, 0.1, 1000);
@@ -60,7 +109,7 @@ function drawMainCanvas(geomtries) {
         scene.add(obj)
     })
 
-
+/**
     // mesh satellite object
     var satelliteMesh = null;
  // const satelliteRotate = satelliteMesh;
@@ -123,7 +172,7 @@ function drawMainCanvas(geomtries) {
             scene.add(asteriodMesh)
         });
 
-
+/*
     // mesh satellite2 object
     var satelliteMesh2 = null;
     // const satelliteRotate = satelliteMesh;
@@ -156,30 +205,35 @@ function drawMainCanvas(geomtries) {
 
                 });
         });
-
+*/
     const controls = new OrbitControls(camera, canvas);
     controls.target.set(0, 5, 0)
     controls.update();
 
     let start;
-    function render(timestamp) {
-        if (start === undefined)
-            start = timestamp;
-        const elapsed = timestamp - start;
+    var theta = 0
+    function render() {
+        // if (start === undefined)
+        //     start = timestamp;
+        // const elapsed = timestamp - start;
+        var now = Date.now();
+        var time = (now - last)/10
+        last = now;
+        theta += dTheta * time * speed
         geomtries.toRotate.forEach((obj) => {
-            obj.rotation.y = elapsed * 0.001;
+            obj.rotation.y += dTheta*time*speed;
         })
-        rotateEarth(geomtries.toDraw[3], elapsed * 0.01)
+        rotateEarth(geomtries.toDraw[3], theta)
         resizeRendererToDisplaySize(renderer);
         renderer.setScissorTest(false);
-        renderer.clear(true, true);
-        renderer.setScissorTest(true);
+                // renderer.clear(true, true);
+                // renderer.setScissorTest(true);
 
         renderer.render(scene, camera);
 
         requestAnimationFrame(render);
     }
-    requestAnimationFrame(render);
+     return requestAnimationFrame(render);
 
 }
 
@@ -234,9 +288,10 @@ function resizeRendererToDisplaySize(renderer) {
 }
 
 // rotate the Earth around the Sun
-function rotateEarth(obj1, time) {
-    obj1.position.x = Math.cos(time * 0.1 + 5) * 50;
-    obj1.position.z = Math.sin(time * 0.1 + 5) * 50;
+function rotateEarth(obj, theta) {
+
+    obj.position.x = Math.cos(theta) * 50;
+    obj.position.z = Math.sin(theta) * 50;
 }
 
 
