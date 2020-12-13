@@ -17,3 +17,7 @@ h1 {
     top: 56px;
     left: 910px;
 }
+
+#interaction {
+    display: flex;
+}

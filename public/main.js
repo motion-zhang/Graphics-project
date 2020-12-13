@@ -3,25 +3,68 @@ import * as THREE from './js/three.module.js';
 import {OBJLoader} from './js/examples/loaders/OBJLoader.js';
 import {MTLLoader} from './js/examples/loaders/MTLLoader.js';
 
+// Can't put them in the function because main and drawMainCanvas and drawMiniCanvas are independent functions, and the
+// function render in drawMainCanvas and drawMiniCanvas need to be called by main directly, and those parameters are all
+// for render function
+let pauseSpeed;
+let speed;
+let last = Date.now();
+var theta = 0;
 var dTheta = 2 * Math.PI / 1000;
 function main() {
+
     let requestID;
+    let requestIDMini;
     let state;
-    let speed;
-    let last = Date.now();
+
 
     document.getElementById('btnResume').addEventListener('click', function (e) {
         e.preventDefault();
         if (!state || (state === undefined)) {
             state = true;
-            speed = 1
-            requestID = drawMainCanvas(mainCanvasInfo,speed,last);
+            if (speed === undefined) {
+                speed = 1;
+            } else {
+                speed = pauseSpeed;
+            }
             last = Date.now()
+            requestID = requestAnimationFrame(drawMainCanvas(mainCanvasInfo))
+            requestIDMini = requestAnimationFrame(drawMiniCanvas(miniCanvasInfo))
+            console.log("begin: ", requestID)
+        }
+    });
 
+    document.getElementById('btnPause').addEventListener('click', function (e) {
+        e.preventDefault();
 
+        if (state) {
+            state = false
+            pauseSpeed = speed;
+            speed = 0;
+            console.log("end: ", requestID);
+            cancelAnimationFrame(requestID);
+            cancelAnimationFrame(requestIDMini);
+
+            requestID = undefined
+            requestIDMini = undefined;
         }
 
     });
+
+    document.getElementById('btnSpeedUp').addEventListener('click', function (e) {
+        e.preventDefault();
+        if (state) {
+            speed += 0.3
+        }
+    });
+
+    document.getElementById('btnSlowDown').addEventListener('click', function (e) {
+        e.preventDefault();
+        if (state && (speed > 0.3)) {
+            speed -= 0.3
+        }
+    });
+
     // texture loader to load images onto geometries
     const loader = new THREE.TextureLoader();
 
@@ -63,42 +106,12 @@ function main() {
     const miniCanvasInfo = {
         toDraw: [pointlight.clone(), ambient.clone(), sunMesh2, earthMesh2],
         toRotate: [sunMesh2, earthMesh2]}
-    // drawMainCanvas(mainCanvasInfo,state)
-    drawMiniCanvas(miniCanvasInfo)
+
 
 }
 
-function drawMainCanvas(geomtries,speed,last) {
+function drawMainCanvas(geomtries) {
 
-/**
-    document.getElementById('btnPause').addEventListener('click', function (e) {
-        e.preventDefault();
-
-        if (state) {
-            // clock.stop()
-            state = false
-            // pauseSpeed = speed;
-            speed = 0
-            cancelAnimationFrame(requestID);
-            requestID = undefined
-        }
-
-    });
-
-    document.getElementById('btnSpeedUp').addEventListener('click', function (e) {
-        e.preventDefault();
-        if (state) {
-            speed += 0.3
-        }
-    });
-
-    document.getElementById('btnSlowDown').addEventListener('click', function (e) {
-        e.preventDefault();
-        if (state && (speed > 0.3)) {
-            speed -= 0.3
-        }
-    });
- **/
 
     const canvas = document.querySelector('#mainCanvas');
     const renderer = new THREE.WebGLRenderer({canvas, alpha: true});
@@ -210,30 +223,33 @@ function drawMainCanvas(geomtries,speed,last) {
     controls.target.set(0, 5, 0)
     controls.update();
 
-    let start;
-    var theta = 0
+
     function render() {
-        // if (start === undefined)
-        //     start = timestamp;
-        // const elapsed = timestamp - start;
+        // Date to trace the timestamp
         var now = Date.now();
         var time = (now - last)/10
         last = now;
-        theta += dTheta * time * speed
+
+        // delta for angle
+        var delta = dTheta * time * speed;
+        theta += delta
+
+        // update y position
         geomtries.toRotate.forEach((obj) => {
-            obj.rotation.y += dTheta*time*speed;
+            obj.rotation.y += delta;
         })
         rotateEarth(geomtries.toDraw[3], theta)
         resizeRendererToDisplaySize(renderer);
         renderer.setScissorTest(false);
-                // renderer.clear(true, true);
-                // renderer.setScissorTest(true);
+                renderer.clear(true, true);
+                renderer.setScissorTest(true);
 
         renderer.render(scene, camera);
 
         requestAnimationFrame(render);
     }
-     return requestAnimationFrame(render);
+
+    return render
 
 }
 
@@ -254,25 +270,27 @@ function drawMiniCanvas(geomtries) {
     controls.target.set(0, 5, 0)
     controls.update();
 
-    let start;
-    function render(timestamp) {
-        if (start === undefined)
-            start = timestamp;
-        const elapsed = timestamp - start;
-        geomtries.toRotate.forEach((obj) => {
-            obj.rotation.y = elapsed * 0.001
-        })
-        rotateEarth(geomtries.toDraw[3], elapsed * 0.01)
-        resizeRendererToDisplaySize(renderer);
+    function render() {
 
+        var now = Date.now();
+        var time = (now - last)/10
+        last = now;
+        var delta = dTheta * time * speed;
+        theta += delta
+        geomtries.toRotate.forEach((obj) => {
+            obj.rotation.y += delta;
+        })
+        rotateEarth(geomtries.toDraw[3], theta)
+        resizeRendererToDisplaySize(renderer);
         renderer.setScissorTest(false);
         renderer.clear(true, true);
         renderer.setScissorTest(true);
 
         renderer.render(scene, camera);
+
         requestAnimationFrame(render);
     }
-    requestAnimationFrame(render);
+    return render
 }
 
 

@@ -5,7 +5,9 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <script src="main.js" type="module"></script>
-    <link rel="stylesheet" href="style.css">
+    <style type="text/css">
+        @import url(style.css);
+    </style>
 
 </head>
 
@@ -15,11 +17,11 @@
         <canvas id="mainCanvas" height="600" width="1200"></canvas>
         <canvas id="miniCanvas" height="150" width="300"></canvas>
 
-        <div class="interaction">
-        <button id="btnResume">Start/Restart</button>
-        <button id="btnStop">Stop</button>
-        <!--<button id="btnSpeedUp">Speed up</button>-->
-        <!--<button id="btnSlowDown">Slow Down</button>-->
+    <div class="interaction">
+        <button id="btnResume">Start/Resume</button>
+        <button id="btnPause">Pause</button>
+        <button id="btnSpeedUp">Speed up</button>
+        <button id="btnSlowDown">Slow Down</button>
 
     </div>
 
