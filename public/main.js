@@ -8,6 +8,7 @@ function main() {
     let state;
     let speed;
     let pauseSpeed;
+    let last = Date.now();
     // var clock = new THREE.Clock()
     const objects = [];
     const canvas = document.querySelector('#canvas');
@@ -20,12 +21,14 @@ function main() {
 
         state = true;
         requestID = requestAnimationFrame(render);
-        if (speed === undefined) {
-            speed = 1.2
-            pauseSpeed = speed;
-        } else {
-            speed = pauseSpeed;
-        }
+        last = Date.now()
+            speed = 1
+        // if (speed === undefined) {
+        //     speed = 1
+        //     pauseSpeed = speed;
+        // } else {
+        //     speed = pauseSpeed;
+        // }
         // clock.start()
         }
 
@@ -37,9 +40,10 @@ function main() {
         if (state) {
             // clock.stop()
             state = false
-            pauseSpeed = speed;
+            // pauseSpeed = speed;
             speed = 0
             cancelAnimationFrame(requestID);
+            requestID = undefined
         }
 
     });
@@ -116,11 +120,14 @@ function main() {
 
 
     function render() {
+        var now = Date.now();
+        var time = (now - last)/10
+        last = now;
         objects.forEach((obj) => {
-            obj.rotation.y += dTheta*speed;
+            obj.rotation.y += dTheta*time*speed;
         });
-        console.log("1. state is ",state, "speed is:",speed, "pause speed: ", pauseSpeed)
-        rotateEarth(earthMesh, speed)
+        // console.log("1. state is ",state, "speed is:",speed, "pause speed: ", pauseSpeed)
+        rotateEarth(earthMesh, time*speed)
         renderer.render(scene, camera);
 
         requestAnimationFrame(render);
@@ -129,9 +136,9 @@ function main() {
 }
 
 // rotate the Earth around the Sun
-function rotateEarth(obj, speed) {
-    theta += dTheta*speed
-    console.log("2.theta is: ", theta, " changed delta: ",dTheta*speed, " speed: ", speed)
+function rotateEarth(obj, time) {
+    theta += dTheta*time
+    // console.log("2.theta is: ", theta, " changed delta: ",dTheta*speed, " speed: ", speed)
 
     // console.log("theta:  ",theta,speed)
 
