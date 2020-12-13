@@ -6,16 +6,20 @@ import {MTLLoader} from './js/examples/loaders/MTLLoader.js';
 // Can't put them in the function because main and drawMainCanvas and drawMiniCanvas are independent functions, and the
 // function render in drawMainCanvas and drawMiniCanvas need to be called by main directly, and those parameters are all
 // for render function
+// pull out the camera of the main canvas to enable the camera can keep the position after resume.
 let pauseSpeed;
 let speed;
 let last = Date.now();
 var theta = 0;
 var dTheta = 2 * Math.PI / 1000;
+const camera = new THREE.PerspectiveCamera(40, 2, 0.1, 1000);
+camera.position.set(0, 0,200);
 function main() {
 
     let requestID;
     let requestIDMini;
     let state;
+
 
 
     document.getElementById('btnResume').addEventListener('click', function (e) {
@@ -115,8 +119,8 @@ function drawMainCanvas(geomtries) {
 
     const canvas = document.querySelector('#mainCanvas');
     const renderer = new THREE.WebGLRenderer({canvas, alpha: true});
-    const camera = new THREE.PerspectiveCamera(40, 2, 0.1, 1000);
-    camera.position.set(0, 0,200);
+    // const camera = new THREE.PerspectiveCamera(40, 2, 0.1, 1000);
+
     const scene = new THREE.Scene();
     geomtries.toDraw.forEach((obj) => {
         scene.add(obj)
@@ -256,7 +260,7 @@ function drawMainCanvas(geomtries) {
 function drawMiniCanvas(geomtries) {
     const canvas = document.querySelector('#miniCanvas');
     const renderer = new THREE.WebGLRenderer({canvas, alpha: true});
-    const camera = new THREE.PerspectiveCamera(40, 2, 0.1, 1000);
+
     const scene = new THREE.Scene();
 
     camera.position.set(0, 200,0);
