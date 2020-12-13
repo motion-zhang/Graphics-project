@@ -6,7 +6,7 @@ h1 {
 }
 #mainCanvas {
     display: block;
-    background: url("image/background.png") no-repeat  center center;
+  /*  background: url("image/background.png") no-repeat  center center; */
     background-size: cover;
 /*    !*position: relative;*!*/
 }
