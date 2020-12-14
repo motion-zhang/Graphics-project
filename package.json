@@ -4,7 +4,8 @@
   "description": "Our team will work on creating an animation to show the revolution of the Earth around the Sun as well as the rotation of themselves for this project",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
