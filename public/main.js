@@ -190,7 +190,7 @@ function drawMainCanvas(geomtries,pause,components) {
             scene.add(asteriodMesh)
         });
 
-    /*
+
         // mesh satellite2 object
         var satelliteMesh2 = null;
         // const satelliteRotate = satelliteMesh;
@@ -219,7 +219,7 @@ function drawMainCanvas(geomtries,pause,components) {
                         scene.add(satelliteMesh2);
                     });
             });
-    */
+
     const controls = new OrbitControls(camera, canvas);
     controls.target.set(0, 5, 0)
     controls.update();
