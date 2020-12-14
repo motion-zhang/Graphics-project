@@ -133,7 +133,7 @@ function drawMainCanvas(geomtries,pause,components) {
         scene.add(obj)
     })
 
-    /**
+
      // mesh satellite object
      var satelliteMesh = null;
      // const satelliteRotate = satelliteMesh;
@@ -163,12 +163,12 @@ function drawMainCanvas(geomtries,pause,components) {
                 });
         });
      // mesh asteriod object
-     /*
+
      // add texture to the asteriod
      var tl_as = new THREE.TextureLoader();
      var map_as = tl_as.load('objects/asteriod/emission.jpg');
      var material_as = new THREE.MeshPhongMaterial({map: map_as});
-     */
+
 
     var asteriodMesh = null;
     const asteriod_objLoader = new OBJLoader();
