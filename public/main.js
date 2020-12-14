@@ -274,9 +274,6 @@ function drawMiniCanvas(geomtries,pause,components) {
             scene.add(obj)
         })
 
-        // const controls = new OrbitControls(camera, canvas);
-        // controls.target.set(0, 5, 0)
-        // controls.update();
     }
     function render() {
 
