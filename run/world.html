@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Computer Graphics Project: Revolution and Rotation</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <script src="main.js" type="module"></script>
+    <style type="text/css">
+        @import url(style.css);
+    </style>
+
+</head>
+
+<body>
+<div class="container">
+    <h1>Revolution and Rotation of the Sun and Earth</h1>
+    <canvas id="mainCanvas" height="600" width="1200"></canvas>
+    <canvas id="miniCanvas" height="150" width="300"></canvas>
+
+    <form method="post" action="http://localhost3000/world"></form>
+
+    <div class="interaction">
+        <button id="btnResume">Start/Resume</button>
+        <button id="btnPause">Pause</button>
+        <button id="btnSpeedUp">Speed up</button>
+        <button id="btnSlowDown">Slow Down</button>
+
+    </div>
+
+</div>
+</body>

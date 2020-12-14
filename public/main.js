@@ -1,7 +1,7 @@
 import {OrbitControls} from './js/examples/OrbitControls.js';
 import * as THREE from './js/three.module.js';
 import {OBJLoader} from './js/examples/loaders/OBJLoader.js';
-import {MTLLoader} from './js/examples/loaders/MTLLoader.js';
+//import {MTLLoader} from './js/examples/loaders/MTLLoader.js';
 
 //main function contains: animation, mainCanvasInfo, miniCanvasInfo
 function main() {

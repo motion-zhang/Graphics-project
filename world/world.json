@@ -1,0 +1,26 @@
+{
+  "lights": [],
+  "objects": [
+    {
+      "material": {
+        "type": "MeshBasicMaterial"
+      },
+
+      "geometry": {
+        "type":"",
+        "size": {
+          "x": 1,
+          "y": 2,
+          "z": 3
+        }
+      },
+
+      "mesh": {
+        "position": {},
+        "scale": {}
+      }
+    }
+  ],
+
+  "cameras" :[]
+}
